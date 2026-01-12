@@ -69,7 +69,6 @@ export default function SignupPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-zinc-950 p-4">
-      {/* Animated mesh gradient background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <motion.div
           className="absolute -right-1/4 -top-1/4 h-[600px] w-[600px] rounded-full bg-gradient-to-bl from-emerald-600/30 via-cyan-500/20 to-transparent blur-3xl"
@@ -110,7 +109,6 @@ export default function SignupPage() {
           }}
         />
 
-        {/* Floating particles */}
         {[...Array(30)].map((_, i) => (
           <motion.div
             key={i}
@@ -132,7 +130,6 @@ export default function SignupPage() {
           />
         ))}
 
-        {/* Animated lines */}
         <svg className="absolute inset-0 h-full w-full opacity-[0.03]">
           <motion.line
             x1="0%"
@@ -158,7 +155,6 @@ export default function SignupPage() {
           />
         </svg>
 
-        {/* Grid overlay */}
         <div
           className="absolute inset-0 opacity-[0.02]"
           style={{
@@ -170,7 +166,6 @@ export default function SignupPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-md">
-        {/* Logo/Brand */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -194,15 +189,12 @@ export default function SignupPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <Card className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
-            {/* Card glow effect */}
             <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-500/10 via-transparent to-violet-500/10" />
 
-            {/* Decorative corner accents */}
             <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 blur-2xl" />
             <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-gradient-to-tr from-violet-500/20 to-fuchsia-500/20 blur-2xl" />
 
             <div className="relative">
-              {/* Social login buttons */}
               <div className="flex gap-3">
                 <Button
                   type="button"
@@ -222,14 +214,12 @@ export default function SignupPage() {
                 </Button>
               </div>
 
-              {/* Divider */}
               <div className="my-6 flex items-center gap-4">
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 <span className="text-xs text-zinc-500">or register with</span>
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               </div>
 
-              {/* Error message */}
               <AnimatePresence>
                 {error && (
                   <motion.div
@@ -263,7 +253,6 @@ export default function SignupPage() {
                   }
                 }}
               >
-                {/* Name input */}
                 <div className="group relative">
                   <div
                     className={cn(
@@ -295,7 +284,6 @@ export default function SignupPage() {
                   </div>
                 </div>
 
-                {/* Email input */}
                 <div className="group relative">
                   <div
                     className={cn(
@@ -327,7 +315,6 @@ export default function SignupPage() {
                   </div>
                 </div>
 
-                {/* Password input */}
                 <div className="group relative">
                   <div
                     className={cn(
@@ -371,7 +358,6 @@ export default function SignupPage() {
                   </div>
                 </div>
 
-                {/* Password strength indicator */}
                 <AnimatePresence>
                   {password.length > 0 && (
                     <motion.div
@@ -380,7 +366,6 @@ export default function SignupPage() {
                       exit={{ opacity: 0, height: 0 }}
                       className="space-y-3 overflow-hidden"
                     >
-                      {/* Strength bar */}
                       <div className="space-y-2">
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-zinc-500">
@@ -424,7 +409,6 @@ export default function SignupPage() {
                         </div>
                       </div>
 
-                      {/* Requirements checklist */}
                       <div className="grid grid-cols-2 gap-2">
                         {passwordRequirements.map((req, i) => (
                           <motion.div
@@ -463,7 +447,6 @@ export default function SignupPage() {
                   )}
                 </AnimatePresence>
 
-                {/* Terms agreement */}
                 <div className="flex items-start gap-3">
                   <div
                     className={cn(
@@ -510,13 +493,11 @@ export default function SignupPage() {
                   </label>
                 </div>
 
-                {/* Submit button */}
                 <Button
                   className="group relative h-14 w-full overflow-hidden bg-gradient-to-r from-emerald-500 to-cyan-500 text-base font-semibold shadow-2xl shadow-emerald-500/25 transition-all hover:shadow-emerald-500/40 disabled:opacity-50"
                   disabled={loading || !agreedToTerms}
                   type="submit"
                 >
-                  {/* Animated background */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-emerald-300 via-cyan-300 to-emerald-300"
                     animate={{
@@ -554,7 +535,6 @@ export default function SignupPage() {
                 </Button>
               </form>
 
-              {/* Login link */}
               <div className="mt-6 text-center text-sm text-zinc-400">
                 Already have an account?{" "}
                 <Link
@@ -568,7 +548,6 @@ export default function SignupPage() {
           </Card>
         </motion.div>
 
-        {/* Trust badges */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -589,7 +568,6 @@ export default function SignupPage() {
           </div>
         </motion.div>
 
-        {/* Feature highlights */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

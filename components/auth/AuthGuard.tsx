@@ -16,20 +16,17 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
     const isPublicRoute = publicRoutes.includes(pathname);
 
-    // If not logged in and trying to access protected route
     if (!user && !isPublicRoute) {
       router.push("/login");
       return;
     }
 
-    // If logged in and trying to access login/signup
     if (user && isPublicRoute) {
       router.push("/dashboard");
       return;
     }
   }, [user, loading, pathname, router]);
 
-  // Show loading state
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
@@ -43,7 +40,6 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Don't render protected content if not authenticated
   const isPublicRoute = publicRoutes.includes(pathname);
   if (!user && !isPublicRoute) {
     return null;

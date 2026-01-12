@@ -36,7 +36,6 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-zinc-950 p-4">
-      {/* Animated mesh gradient background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <motion.div
           className="absolute -left-1/4 -top-1/4 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-violet-600/30 via-fuchsia-500/20 to-transparent blur-3xl"
@@ -77,7 +76,6 @@ export default function LoginPage() {
           }}
         />
 
-        {/* Floating particles */}
         {[...Array(30)].map((_, i) => (
           <motion.div
             key={i}
@@ -99,7 +97,6 @@ export default function LoginPage() {
           />
         ))}
 
-        {/* Grid overlay */}
         <div
           className="absolute inset-0 opacity-[0.02]"
           style={{
@@ -111,7 +108,6 @@ export default function LoginPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-md">
-        {/* Logo/Brand */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -135,15 +131,12 @@ export default function LoginPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <Card className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
-            {/* Card glow effect */}
             <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-violet-500/10 via-transparent to-cyan-500/10" />
 
-            {/* Decorative corner accents */}
             <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 blur-2xl" />
             <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 blur-2xl" />
 
             <div className="relative">
-              {/* Social login buttons */}
               <div className="flex gap-3">
                 <Button
                   type="button"
@@ -163,14 +156,12 @@ export default function LoginPage() {
                 </Button>
               </div>
 
-              {/* Divider */}
               <div className="my-6 flex items-center gap-4">
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 <span className="text-xs text-zinc-500">or continue with</span>
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               </div>
 
-              {/* Error message */}
               <AnimatePresence>
                 {error && (
                   <motion.div
@@ -210,7 +201,6 @@ export default function LoginPage() {
                   }
                 }}
               >
-                {/* Email input */}
                 <div className="group relative">
                   <div
                     className={cn(
@@ -242,7 +232,6 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {/* Password input */}
                 <div className="group relative">
                   <div
                     className={cn(
@@ -285,7 +274,6 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {/* Remember me & Forgot password */}
                 <div className="flex items-center justify-between">
                   <label className="flex cursor-pointer items-center gap-2">
                     <div
@@ -325,13 +313,11 @@ export default function LoginPage() {
                   </Link>
                 </div>
 
-                {/* Submit button */}
                 <Button
                   className="group relative h-14 w-full overflow-hidden bg-gradient-to-r from-violet-600 to-fuchsia-500 text-base font-semibold shadow-2xl shadow-violet-500/25 transition-all hover:shadow-violet-500/40"
                   disabled={loading}
                   type="submit"
                 >
-                  {/* Animated background */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-violet-400 via-fuchsia-400 to-violet-400"
                     animate={{
@@ -369,7 +355,6 @@ export default function LoginPage() {
                 </Button>
               </form>
 
-              {/* Sign up link */}
               <div className="mt-6 text-center text-sm text-zinc-400">
                 Don't have an account?{" "}
                 <Link
@@ -383,7 +368,6 @@ export default function LoginPage() {
           </Card>
         </motion.div>
 
-        {/* Trust badges */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

@@ -45,7 +45,6 @@ export function CallPanel() {
   const localVideoRef = React.useRef<HTMLVideoElement>(null);
   const streamRef = React.useRef<MediaStream | null>(null);
 
-  // Start camera when video is turned on
   React.useEffect(() => {
     let mounted = true;
 
@@ -92,7 +91,6 @@ export function CallPanel() {
     };
   }, [videoOn]);
 
-  // Cleanup on unmount
   React.useEffect(() => {
     return () => {
       if (streamRef.current) {
@@ -103,28 +101,22 @@ export function CallPanel() {
 
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:gap-6">
-      {/* Main Call Area */}
       <div className="relative flex-1 overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl sm:rounded-3xl">
-        {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 via-transparent to-cyan-600/10" />
 
-        {/* Video Area */}
         <div className="relative flex h-[300px] w-full items-center justify-center sm:h-[400px] md:h-[500px]">
-          {/* Idle State */}
           {status === "idle" && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="flex flex-col items-center justify-center px-4 text-center"
             >
-              {/* Avatar */}
               <div className="relative mx-auto">
                 <div className="h-20 w-20 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 p-1 sm:h-28 sm:w-28">
                   <div className="flex h-full w-full items-center justify-center rounded-full bg-zinc-900">
                     <User className="h-10 w-10 text-white/80 sm:h-14 sm:w-14" />
                   </div>
                 </div>
-                {/* Pulse ring */}
                 <div className="absolute inset-0 animate-ping rounded-full bg-violet-500/20" />
               </div>
 
@@ -135,7 +127,6 @@ export function CallPanel() {
                 Start a call to begin your conversation
               </p>
 
-              {/* Start Call Button */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -153,7 +144,6 @@ export function CallPanel() {
             </motion.div>
           )}
 
-          {/* Ringing State */}
           {status === "ringing" && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -170,7 +160,6 @@ export function CallPanel() {
                     <PhoneCall className="h-10 w-10 text-amber-400 sm:h-14 sm:w-14" />
                   </div>
                 </motion.div>
-                {/* Animated rings */}
                 {[...Array(3)].map((_, i) => (
                   <motion.div
                     key={i}
@@ -195,7 +184,6 @@ export function CallPanel() {
             </motion.div>
           )}
 
-          {/* Connected State */}
           {status === "connected" && (
             <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900 px-4">
               <div className="mx-auto h-24 w-24 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 p-1 sm:h-32 sm:w-32">
@@ -210,7 +198,6 @@ export function CallPanel() {
             </div>
           )}
 
-          {/* Ended State */}
           {status === "ended" && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -248,10 +235,8 @@ export function CallPanel() {
             </motion.div>
           )}
 
-          {/* Top bar - Status & Timer */}
           <div className="absolute left-0 right-0 top-0 flex items-center justify-between p-3 sm:p-4">
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Status badge */}
               <div
                 className={cn(
                   "flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium backdrop-blur-sm sm:gap-2 sm:px-4 sm:py-2 sm:text-sm",
@@ -281,7 +266,6 @@ export function CallPanel() {
                 </span>
               </div>
 
-              {/* Timer */}
               {status === "connected" && (
                 <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1.5 backdrop-blur-sm sm:gap-2 sm:px-4 sm:py-2">
                   <Clock className="h-3 w-3 text-white/70 sm:h-4 sm:w-4" />
@@ -292,14 +276,12 @@ export function CallPanel() {
               )}
             </div>
 
-            {/* Connection quality */}
             <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-2 py-1.5 backdrop-blur-sm sm:gap-2 sm:px-3 sm:py-2">
               <Wifi className="h-3 w-3 text-emerald-400 sm:h-4 sm:w-4" />
               <Shield className="h-3 w-3 text-cyan-400 sm:h-4 sm:w-4" />
             </div>
           </div>
 
-          {/* Local video preview */}
           {(status === "connected" || status === "ringing") && (
             <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
               <div className="overflow-hidden rounded-xl border-2 border-white/20 bg-zinc-800 shadow-xl sm:rounded-2xl">
@@ -324,7 +306,6 @@ export function CallPanel() {
             </div>
           )}
 
-          {/* User name */}
           {(status === "connected" || status === "ringing") && (
             <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
               <div className="flex items-center gap-2 rounded-lg bg-black/50 px-2.5 py-1.5 backdrop-blur-sm sm:gap-3 sm:rounded-xl sm:px-4 sm:py-2">
@@ -341,11 +322,9 @@ export function CallPanel() {
           )}
         </div>
 
-        {/* Call Controls */}
         {(status === "ringing" || status === "connected") && (
           <div className="border-t border-white/10 bg-black/30 p-3 backdrop-blur-sm sm:p-4">
             <div className="flex items-center justify-center gap-3 sm:gap-4">
-              {/* Mute button */}
               <button
                 onClick={toggleMute}
                 className={cn(
@@ -362,7 +341,6 @@ export function CallPanel() {
                 )}
               </button>
 
-              {/* Video button */}
               <button
                 onClick={toggleVideo}
                 className={cn(
@@ -379,7 +357,6 @@ export function CallPanel() {
                 )}
               </button>
 
-              {/* End call button */}
               <button
                 onClick={end}
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-rose-500 text-white shadow-lg shadow-rose-500/30 transition-all hover:bg-rose-600 sm:h-14 sm:w-14"
@@ -393,7 +370,6 @@ export function CallPanel() {
 
       {/* Sidebar */}
       <div className="w-full space-y-4 lg:w-[340px]">
-        {/* Call Info */}
         <Card className="rounded-xl border border-zinc-200 bg-white p-4 shadow-lg dark:border-zinc-800 dark:bg-zinc-900 sm:rounded-2xl sm:p-5">
           <h3 className="flex items-center gap-2 text-base font-semibold sm:text-lg">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/10 sm:h-8 sm:w-8">
@@ -403,7 +379,6 @@ export function CallPanel() {
           </h3>
 
           <div className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
-            {/* Status */}
             <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:rounded-xl sm:p-3">
               <span className="text-xs text-zinc-500 sm:text-sm">Status</span>
               <span
@@ -422,7 +397,6 @@ export function CallPanel() {
               </span>
             </div>
 
-            {/* Duration */}
             <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:rounded-xl sm:p-3">
               <span className="text-xs text-zinc-500 sm:text-sm">Duration</span>
               <span className="font-mono text-xs font-semibold sm:text-sm">
@@ -432,7 +406,6 @@ export function CallPanel() {
               </span>
             </div>
 
-            {/* Microphone */}
             <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:rounded-xl sm:p-3">
               <span className="text-xs text-zinc-500 sm:text-sm">
                 Microphone
@@ -449,7 +422,6 @@ export function CallPanel() {
               </div>
             </div>
 
-            {/* Camera */}
             <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:rounded-xl sm:p-3">
               <span className="text-xs text-zinc-500 sm:text-sm">Camera</span>
               <div className="flex items-center gap-1.5 sm:gap-2">
@@ -466,7 +438,6 @@ export function CallPanel() {
           </div>
         </Card>
 
-        {/* Participants */}
         <Card className="rounded-xl border border-zinc-200 bg-white p-4 shadow-lg dark:border-zinc-800 dark:bg-zinc-900 sm:rounded-2xl sm:p-5">
           <h3 className="flex items-center gap-2 text-base font-semibold sm:text-lg">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-500/10 sm:h-8 sm:w-8">
@@ -476,7 +447,6 @@ export function CallPanel() {
           </h3>
 
           <div className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
-            {/* You */}
             <div className="flex items-center gap-2.5 rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:gap-3 sm:rounded-xl sm:p-3">
               <div className="h-8 w-8 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 p-0.5 sm:h-10 sm:w-10">
                 <div className="flex h-full w-full items-center justify-center rounded-full bg-white dark:bg-zinc-900">
@@ -492,7 +462,6 @@ export function CallPanel() {
               <div className="h-2 w-2 rounded-full bg-emerald-500" />
             </div>
 
-            {/* Remote user */}
             <div className="flex items-center gap-2.5 rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:gap-3 sm:rounded-xl sm:p-3">
               <div className="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 p-0.5 sm:h-10 sm:w-10">
                 <div className="flex h-full w-full items-center justify-center rounded-full bg-white dark:bg-zinc-900">
@@ -517,7 +486,6 @@ export function CallPanel() {
           </div>
         </Card>
 
-        {/* Note */}
         <div className="rounded-lg bg-zinc-100 p-3 text-[10px] text-zinc-500 dark:bg-zinc-800/50 dark:text-zinc-400 sm:rounded-xl sm:p-4 sm:text-xs">
           <p>
             <strong>Note:</strong> This demo uses your device camera for the

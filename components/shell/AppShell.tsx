@@ -61,13 +61,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="relative min-h-dvh bg-zinc-50 dark:bg-zinc-950">
-      {/* Background effects */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -left-1/4 -top-1/4 h-[600px] w-[600px] animate-pulse rounded-full bg-gradient-to-br from-violet-500/5 via-fuchsia-500/5 to-transparent blur-3xl dark:from-violet-500/10 dark:via-fuchsia-500/5" />
         <div className="absolute -bottom-1/4 -right-1/4 h-[500px] w-[500px] animate-pulse rounded-full bg-gradient-to-tl from-cyan-500/5 via-blue-500/5 to-transparent blur-3xl [animation-delay:1s] dark:from-cyan-500/10 dark:via-blue-500/5" />
       </div>
 
-      {/* Mobile header */}
       <div className="sticky top-0 z-50 flex items-center justify-between border-b border-zinc-200/50 bg-white/80 p-4 backdrop-blur-xl dark:border-zinc-800/50 dark:bg-zinc-950/80 md:hidden">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 shadow-lg shadow-violet-500/20">
@@ -102,7 +100,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
-      {/* Mobile menu overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -115,7 +112,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         )}
       </AnimatePresence>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.aside
@@ -137,10 +133,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
 
       <div className="relative mx-auto grid w-full grid-cols-1 gap-6 p-4 md:grid-cols-[280px_1fr] md:p-6">
-        {/* Desktop sidebar */}
         <aside className="hidden md:block">
           <div className="sticky top-6 overflow-hidden rounded-3xl border border-white/20 bg-white/70 shadow-2xl shadow-zinc-900/5 backdrop-blur-xl dark:border-white/5 dark:bg-zinc-900/70 dark:shadow-zinc-900/50">
-            {/* Decorative gradient orbs */}
             <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 blur-2xl" />
             <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 blur-2xl" />
 
@@ -153,9 +147,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </aside>
 
-        {/* Main content */}
         <main className="relative min-w-0">
-          {/* Top bar for desktop */}
           <div className="mb-6 hidden items-center justify-between md:flex">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
@@ -224,7 +216,6 @@ function SidebarContent({
 }) {
   return (
     <div className="relative flex h-auto flex-col p-4">
-      {/* Logo */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-500 shadow-lg shadow-violet-500/25">
@@ -252,7 +243,6 @@ function SidebarContent({
         )}
       </div>
 
-      {/* Pro badge */}
       {user && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -279,7 +269,6 @@ function SidebarContent({
         </motion.div>
       )}
 
-      {/* Main navigation */}
       <nav className="mt-6 space-y-1">
         <div className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
           Main Menu
@@ -304,7 +293,6 @@ function SidebarContent({
                     : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-white"
                 )}
               >
-                {/* Active background */}
                 {active && (
                   <motion.div
                     layoutId="activeNav"
@@ -342,7 +330,6 @@ function SidebarContent({
         })}
       </nav>
 
-      {/* Secondary navigation */}
       <nav className="mt-6 space-y-1">
         <div className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
           Support
@@ -371,10 +358,8 @@ function SidebarContent({
         })}
       </nav>
 
-      {/* Spacer */}
       <div className="flex-1" />
 
-      {/* User section */}
       <div className="mt-6 overflow-hidden rounded-2xl border border-zinc-200/50 bg-gradient-to-br from-zinc-50 to-white p-4 dark:border-zinc-800/50 dark:from-zinc-900 dark:to-zinc-800/50">
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -443,7 +428,6 @@ function SidebarContent({
         </div>
       </div>
 
-      {/* Version info */}
       <div className="mt-4 text-center text-[10px] text-zinc-400">
         <span>Version 2.0.0</span>
         <span className="mx-2">•</span>
