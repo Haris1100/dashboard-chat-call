@@ -8,7 +8,7 @@ export function Table({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-2xl border border-zinc-200/60 dark:border-zinc-800/70",
+        "overflow-x-auto rounded-2xl border border-zinc-200/60 dark:border-zinc-800/70",
         className
       )}
       {...props}

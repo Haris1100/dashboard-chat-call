@@ -1,256 +1,9 @@
-// "use client";
-
-// import * as React from "react";
-// import { Card } from "@/components/ui/Card";
-// import { Button } from "@/components/ui/Button";
-// import { Badge } from "@/components/ui/Badge";
-// import { useCall } from "@/context/CallContext";
-// import { useAuth } from "@/context/AuthContext";
-// import {
-//   Mic,
-//   MicOff,
-//   Video,
-//   VideoOff,
-//   PhoneCall,
-//   PhoneOff,
-//   RotateCcw,
-// } from "lucide-react";
-
-// function formatTime(seconds: number) {
-//   const mins = Math.floor(seconds / 60);
-//   const secs = seconds % 60;
-//   return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-// }
-
-// export function CallPanel() {
-//   const { user } = useAuth();
-//   const {
-//     status,
-//     muted,
-//     videoOn,
-//     seconds,
-//     start,
-//     end,
-//     toggleMute,
-//     toggleVideo,
-//     reset,
-//   } = useCall();
-
-//   const localVideoRef = React.useRef<HTMLVideoElement>(null);
-//   const remoteVideoRef = React.useRef<HTMLVideoElement>(null);
-//   const streamRef = React.useRef<MediaStream | null>(null);
-
-//   // Start camera when video is turned on
-//   React.useEffect(() => {
-//     let mounted = true;
-
-//     async function startCamera() {
-//       if (!videoOn) {
-//         // Stop camera if video is off
-//         if (streamRef.current) {
-//           streamRef.current.getTracks().forEach((track) => track.stop());
-//           streamRef.current = null;
-//         }
-//         if (localVideoRef.current) {
-//           localVideoRef.current.srcObject = null;
-//         }
-//         return;
-//       }
-
-//       try {
-//         const stream = await navigator.mediaDevices.getUserMedia({
-//           video: { width: 1280, height: 720 },
-//           audio: false,
-//         });
-
-//         if (!mounted) {
-//           stream.getTracks().forEach((track) => track.stop());
-//           return;
-//         }
-
-//         streamRef.current = stream;
-
-//         if (localVideoRef.current) {
-//           localVideoRef.current.srcObject = stream;
-//         }
-//       } catch (err) {
-//         console.error("Error accessing camera:", err);
-//         alert("Could not access camera. Please check permissions.");
-//       }
-//     }
-
-//     startCamera();
-
-//     return () => {
-//       mounted = false;
-//       if (streamRef.current) {
-//         streamRef.current.getTracks().forEach((track) => track.stop());
-//       }
-//     };
-//   }, [videoOn]);
-
-//   // Cleanup on unmount
-//   React.useEffect(() => {
-//     return () => {
-//       if (streamRef.current) {
-//         streamRef.current.getTracks().forEach((track) => track.stop());
-//       }
-//     };
-//   }, []);
-
-//   const badgeColor =
-//     status === "connected"
-//       ? "green"
-//       : status === "ringing"
-//         ? "amber"
-//         : status === "ended"
-//           ? "red"
-//           : "neutral";
-
-//   return (
-//     <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
-//       <Card className="relative overflow-hidden">
-//         <div className="relative h-[520px] w-full bg-zinc-950">
-//           {/* Remote video feed (simulated) */}
-//           <video
-//             ref={remoteVideoRef}
-//             className="h-full w-full object-cover opacity-90"
-//             autoPlay
-//             playsInline
-//             muted
-//             style={{ transform: "scaleX(-1)" }}
-//           />
-
-//           {/* Fallback background when no remote video */}
-//           <div className="absolute inset-0 -z-10 bg-gradient-to-br from-zinc-800 to-zinc-900" />
-
-//           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-black/30" />
-
-//           {/* Status badge and timer */}
-//           <div className="absolute left-4 top-4 flex items-center gap-3">
-//             <Badge tone={badgeColor}>{status.toUpperCase()}</Badge>
-//             <div className="text-sm font-semibold text-white">
-//               {status === "connected" ? formatTime(seconds) : "00:00"}
-//             </div>
-//           </div>
-
-//           {/* User info */}
-//           <div className="absolute bottom-4 left-4">
-//             <div className="text-sm font-semibold text-white">
-//               {user?.displayName ?? "Guest Caller"}
-//             </div>
-//             <div className="text-xs text-white/70">
-//               {status === "ringing"
-//                 ? "Ringing..."
-//                 : status === "connected"
-//                   ? "Connected"
-//                   : status === "ended"
-//                     ? "Call ended"
-//                     : "Ready"}
-//             </div>
-//           </div>
-
-//           {/* Local video preview */}
-//           <div className="absolute bottom-4 right-4 overflow-hidden rounded-2xl border border-white/15 bg-black/30">
-//             {videoOn ? (
-//               <video
-//                 ref={localVideoRef}
-//                 autoPlay
-//                 playsInline
-//                 muted
-//                 className="h-[120px] w-[160px] object-cover"
-//                 style={{ transform: "scaleX(-1)" }}
-//               />
-//             ) : (
-//               <div className="flex h-[120px] w-[160px] items-center justify-center text-xs text-white/70">
-//                 Video Off
-//               </div>
-//             )}
-//           </div>
-//         </div>
-
-//         {/* Call controls */}
-//         <div className="flex flex-wrap items-center justify-center gap-2 p-4">
-//           {status === "idle" && (
-//             <Button onClick={start}>
-//               <PhoneCall className="h-4 w-4" />
-//               Start Call
-//             </Button>
-//           )}
-
-//           {(status === "ringing" || status === "connected") && (
-//             <>
-//               <Button variant="secondary" onClick={toggleMute}>
-//                 {muted ? (
-//                   <MicOff className="h-4 w-4" />
-//                 ) : (
-//                   <Mic className="h-4 w-4" />
-//                 )}
-//                 {muted ? "Unmute" : "Mute"}
-//               </Button>
-//               <Button variant="secondary" onClick={toggleVideo}>
-//                 {videoOn ? (
-//                   <Video className="h-4 w-4" />
-//                 ) : (
-//                   <VideoOff className="h-4 w-4" />
-//                 )}
-//                 {videoOn ? "Video On" : "Video Off"}
-//               </Button>
-//               <Button variant="danger" onClick={end}>
-//                 <PhoneOff className="h-4 w-4" />
-//                 End
-//               </Button>
-//             </>
-//           )}
-
-//           {status === "ended" && (
-//             <Button variant="secondary" onClick={reset}>
-//               <RotateCcw className="h-4 w-4" />
-//               Reset
-//             </Button>
-//           )}
-//         </div>
-//       </Card>
-
-//       {/* Call status sidebar */}
-//       <Card className="p-5">
-//         <div className="text-sm font-semibold">Call status</div>
-//         <div className="mt-2 rounded-2xl border border-zinc-200/60 p-4 text-sm dark:border-zinc-800/70">
-//           <div className="flex items-center justify-between">
-//             <div className="text-zinc-600 dark:text-zinc-300">State</div>
-//             <div className="font-semibold">{status}</div>
-//           </div>
-//           <div className="mt-3 flex items-center justify-between">
-//             <div className="text-zinc-600 dark:text-zinc-300">Timer</div>
-//             <div className="font-semibold">
-//               {status === "connected" ? formatTime(seconds) : "00:00"}
-//             </div>
-//           </div>
-//           <div className="mt-3 flex items-center justify-between">
-//             <div className="text-zinc-600 dark:text-zinc-300">Microphone</div>
-//             <div className="font-semibold">{muted ? "Muted" : "On"}</div>
-//           </div>
-//           <div className="mt-3 flex items-center justify-between">
-//             <div className="text-zinc-600 dark:text-zinc-300">Camera</div>
-//             <div className="font-semibold">{videoOn ? "On" : "Off"}</div>
-//           </div>
-//         </div>
-
-//         <div className="mt-4 text-xs text-zinc-500 dark:text-zinc-400">
-//           This demo uses your device camera for the local preview. Remote video
-//           is simulated. Click the video button to enable your camera.
-//         </div>
-//       </Card>
-//     </div>
-//   );
-// }
 "use client";
 
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { useCall } from "@/context/CallContext";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -263,8 +16,9 @@ import {
   RotateCcw,
   User,
   Users,
-  Zap,
-  Sparkles,
+  Clock,
+  Shield,
+  Wifi,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 
@@ -289,9 +43,7 @@ export function CallPanel() {
   } = useCall();
 
   const localVideoRef = React.useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = React.useRef<HTMLVideoElement>(null);
   const streamRef = React.useRef<MediaStream | null>(null);
-  const [pulse, setPulse] = React.useState(false);
 
   // Start camera when video is turned on
   React.useEffect(() => {
@@ -299,7 +51,6 @@ export function CallPanel() {
 
     async function startCamera() {
       if (!videoOn) {
-        // Stop camera if video is off
         if (streamRef.current) {
           streamRef.current.getTracks().forEach((track) => track.stop());
           streamRef.current = null;
@@ -312,12 +63,7 @@ export function CallPanel() {
 
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: 1280,
-            height: 720,
-            facingMode: "user",
-            frameRate: { ideal: 30, max: 60 },
-          },
+          video: { width: 1280, height: 720 },
           audio: false,
         });
 
@@ -333,7 +79,6 @@ export function CallPanel() {
         }
       } catch (err) {
         console.error("Error accessing camera:", err);
-        alert("Could not access camera. Please check permissions.");
       }
     }
 
@@ -356,453 +101,430 @@ export function CallPanel() {
     };
   }, []);
 
-  // Pulse effect for ringing state
-  React.useEffect(() => {
-    if (status === "ringing") {
-      const interval = setInterval(() => {
-        setPulse((prev) => !prev);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [status]);
-
-  const badgeColor =
-    status === "connected"
-      ? "green"
-      : status === "ringing"
-        ? "amber"
-        : status === "ended"
-          ? "red"
-          : "neutral";
-
-  const statusGradient =
-    status === "connected"
-      ? "from-emerald-500/20 to-teal-500/20"
-      : status === "ringing"
-        ? "from-amber-500/20 to-orange-500/20"
-        : status === "ended"
-          ? "from-rose-500/20 to-pink-500/20"
-          : "from-zinc-500/10 to-zinc-500/10";
-
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
-      {/* Main call area */}
-      <Card className="relative overflow-hidden rounded-3xl border-0 shadow-2xl">
-        {/* Animated background */}
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div
-            className={`absolute inset-0 bg-gradient-to-br ${statusGradient} opacity-50`}
-          />
-          <AnimatePresence>
-            {status === "ringing" && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-orange-500/10"
-                style={{
-                  maskImage:
-                    "radial-gradient(circle, white 2px, transparent 2px)",
-                  maskSize: "20px 20px",
-                  backdropFilter: "blur(10px)",
-                }}
-              />
-            )}
-          </AnimatePresence>
-        </div>
+    <div className="flex flex-col gap-4 lg:flex-row lg:gap-6">
+      {/* Main Call Area */}
+      <div className="relative flex-1 overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl sm:rounded-3xl">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 via-transparent to-cyan-600/10" />
 
-        {/* Video container */}
-        <div className="relative h-[560px] w-full overflow-hidden">
-          {/* Remote video feed (simulated) */}
-          <video
-            ref={remoteVideoRef}
-            className="h-full w-full object-cover opacity-90 transition-opacity duration-500"
-            autoPlay
-            playsInline
-            muted
-            style={{ transform: "scaleX(-1)" }}
-          />
-
-          {/* Fallback background with animated particles */}
-          <div className="absolute inset-0 -z-10 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black">
-            <div className="absolute inset-0 overflow-hidden">
-              {[...Array(20)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute h-1 w-1 rounded-full bg-white/10"
-                  initial={{
-                    x: Math.random() * 100,
-                    y: Math.random() * 100,
-                    opacity: 0,
-                  }}
-                  animate={{
-                    x: Math.random() * 100 + 100,
-                    y: Math.random() * 100 + 100,
-                    opacity: [0, 0.5, 0],
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{
-                    duration: 10 + Math.random() * 10,
-                    repeat: Infinity,
-                    delay: Math.random() * 5,
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-          {/* Status elements */}
-          <div className="absolute left-6 top-6 flex items-center gap-4">
-            <Badge tone={badgeColor}>{status.toUpperCase()}</Badge>
-            <div className="text-lg font-mono font-semibold text-white">
-              {status === "connected" ? formatTime(seconds) : "00:00"}
-            </div>
-          </div>
-
-          {/* User info with animated avatar */}
-          <div className="absolute bottom-6 left-6">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500">
-                  {user?.photoURL ? (
-                    <img
-                      src={user.photoURL}
-                      alt="User"
-                      className="h-11 w-11 rounded-full object-cover"
-                    />
-                  ) : (
-                    <User className="h-6 w-6 text-white" />
-                  )}
+        {/* Video Area */}
+        <div className="relative flex h-[300px] w-full items-center justify-center sm:h-[400px] md:h-[500px]">
+          {/* Idle State */}
+          {status === "idle" && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex flex-col items-center justify-center px-4 text-center"
+            >
+              {/* Avatar */}
+              <div className="relative mx-auto">
+                <div className="h-20 w-20 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 p-1 sm:h-28 sm:w-28">
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-zinc-900">
+                    <User className="h-10 w-10 text-white/80 sm:h-14 sm:w-14" />
+                  </div>
                 </div>
-                {status === "connected" && (
+                {/* Pulse ring */}
+                <div className="absolute inset-0 animate-ping rounded-full bg-violet-500/20" />
+              </div>
+
+              <h2 className="mt-4 text-xl font-bold text-white sm:mt-6 sm:text-2xl">
+                Ready to Connect
+              </h2>
+              <p className="mt-1 text-sm text-zinc-400 sm:mt-2 sm:text-base">
+                Start a call to begin your conversation
+              </p>
+
+              {/* Start Call Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mt-6 sm:mt-8"
+              >
+                <Button
+                  onClick={start}
+                  className="h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 text-base font-semibold shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 hover:shadow-emerald-500/40 sm:h-14 sm:rounded-2xl sm:px-8 sm:text-lg"
+                >
+                  <PhoneCall className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                  Start Call
+                </Button>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* Ringing State */}
+          {status === "ringing" && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center px-4 text-center"
+            >
+              <div className="relative mx-auto">
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="h-20 w-20 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 p-1 sm:h-28 sm:w-28"
+                >
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-zinc-900">
+                    <PhoneCall className="h-10 w-10 text-amber-400 sm:h-14 sm:w-14" />
+                  </div>
+                </motion.div>
+                {/* Animated rings */}
+                {[...Array(3)].map((_, i) => (
                   <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-zinc-950 bg-emerald-500"
+                    key={i}
+                    className="absolute inset-0 rounded-full border-2 border-amber-500/50"
+                    animate={{ scale: [1, 1.8], opacity: [0.5, 0] }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      delay: i * 0.4,
+                    }}
                   />
+                ))}
+              </div>
+
+              <motion.h2
+                animate={{ opacity: [1, 0.5, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="mt-4 text-xl font-bold text-white sm:mt-6 sm:text-2xl"
+              >
+                Connecting...
+              </motion.h2>
+            </motion.div>
+          )}
+
+          {/* Connected State */}
+          {status === "connected" && (
+            <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900 px-4">
+              <div className="mx-auto h-24 w-24 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 p-1 sm:h-32 sm:w-32">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-zinc-800">
+                  <User className="h-12 w-12 text-white/80 sm:h-16 sm:w-16" />
+                </div>
+              </div>
+              <p className="mt-3 text-base font-medium text-white sm:mt-4 sm:text-lg">
+                Remote User
+              </p>
+              <p className="text-xs text-zinc-400 sm:text-sm">Connected</p>
+            </div>
+          )}
+
+          {/* Ended State */}
+          {status === "ended" && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex flex-col items-center justify-center px-4 text-center"
+            >
+              <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-br from-rose-500 to-pink-500 p-1 sm:h-28 sm:w-28">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-zinc-900">
+                  <PhoneOff className="h-10 w-10 text-rose-400 sm:h-14 sm:w-14" />
+                </div>
+              </div>
+
+              <h2 className="mt-4 text-xl font-bold text-white sm:mt-6 sm:text-2xl">
+                Call Ended
+              </h2>
+              <p className="mt-1 text-sm text-zinc-400 sm:mt-2 sm:text-base">
+                Duration: {formatTime(seconds)}
+              </p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mt-6 sm:mt-8"
+              >
+                <Button
+                  onClick={reset}
+                  variant="secondary"
+                  className="h-10 rounded-xl px-5 sm:h-12 sm:px-6"
+                >
+                  <RotateCcw className="mr-2 h-4 w-4" />
+                  Start New Call
+                </Button>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* Top bar - Status & Timer */}
+          <div className="absolute left-0 right-0 top-0 flex items-center justify-between p-3 sm:p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Status badge */}
+              <div
+                className={cn(
+                  "flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium backdrop-blur-sm sm:gap-2 sm:px-4 sm:py-2 sm:text-sm",
+                  status === "connected"
+                    ? "bg-emerald-500/20 text-emerald-400"
+                    : status === "ringing"
+                      ? "bg-amber-500/20 text-amber-400"
+                      : status === "ended"
+                        ? "bg-rose-500/20 text-rose-400"
+                        : "bg-white/10 text-white"
+                )}
+              >
+                <span
+                  className={cn(
+                    "h-1.5 w-1.5 rounded-full sm:h-2 sm:w-2",
+                    status === "connected"
+                      ? "bg-emerald-400"
+                      : status === "ringing"
+                        ? "animate-pulse bg-amber-400"
+                        : status === "ended"
+                          ? "bg-rose-400"
+                          : "bg-white/50"
+                  )}
+                />
+                <span className="hidden xs:inline">
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </span>
+              </div>
+
+              {/* Timer */}
+              {status === "connected" && (
+                <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1.5 backdrop-blur-sm sm:gap-2 sm:px-4 sm:py-2">
+                  <Clock className="h-3 w-3 text-white/70 sm:h-4 sm:w-4" />
+                  <span className="font-mono text-xs font-semibold text-white sm:text-sm">
+                    {formatTime(seconds)}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Connection quality */}
+            <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-2 py-1.5 backdrop-blur-sm sm:gap-2 sm:px-3 sm:py-2">
+              <Wifi className="h-3 w-3 text-emerald-400 sm:h-4 sm:w-4" />
+              <Shield className="h-3 w-3 text-cyan-400 sm:h-4 sm:w-4" />
+            </div>
+          </div>
+
+          {/* Local video preview */}
+          {(status === "connected" || status === "ringing") && (
+            <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
+              <div className="overflow-hidden rounded-xl border-2 border-white/20 bg-zinc-800 shadow-xl sm:rounded-2xl">
+                {videoOn ? (
+                  <video
+                    ref={localVideoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="h-[80px] w-[100px] object-cover sm:h-[120px] sm:w-[160px]"
+                    style={{ transform: "scaleX(-1)" }}
+                  />
+                ) : (
+                  <div className="flex h-[80px] w-[100px] flex-col items-center justify-center bg-zinc-800 sm:h-[120px] sm:w-[160px]">
+                    <VideoOff className="h-5 w-5 text-zinc-500 sm:h-8 sm:w-8" />
+                    <span className="mt-1 text-[10px] text-zinc-500 sm:mt-2 sm:text-xs">
+                      Camera Off
+                    </span>
+                  </div>
                 )}
               </div>
-              <div>
-                <div className="text-base font-semibold text-white">
-                  {user?.displayName ?? "Guest Caller"}
+            </div>
+          )}
+
+          {/* User name */}
+          {(status === "connected" || status === "ringing") && (
+            <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
+              <div className="flex items-center gap-2 rounded-lg bg-black/50 px-2.5 py-1.5 backdrop-blur-sm sm:gap-3 sm:rounded-xl sm:px-4 sm:py-2">
+                <div className="h-6 w-6 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 p-0.5 sm:h-8 sm:w-8">
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-zinc-900">
+                    <User className="h-3 w-3 text-white sm:h-4 sm:w-4" />
+                  </div>
                 </div>
-                <div className="text-xs text-white/70">
-                  {status === "ringing"
-                    ? "Ringing..."
-                    : status === "connected"
-                      ? "Connected"
+                <span className="text-xs font-medium text-white sm:text-sm">
+                  {user?.displayName ?? "You"}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Call Controls */}
+        {(status === "ringing" || status === "connected") && (
+          <div className="border-t border-white/10 bg-black/30 p-3 backdrop-blur-sm sm:p-4">
+            <div className="flex items-center justify-center gap-3 sm:gap-4">
+              {/* Mute button */}
+              <button
+                onClick={toggleMute}
+                className={cn(
+                  "flex h-11 w-11 items-center justify-center rounded-full transition-all sm:h-14 sm:w-14",
+                  muted
+                    ? "bg-rose-500 text-white shadow-lg shadow-rose-500/30"
+                    : "bg-white/10 text-white hover:bg-white/20"
+                )}
+              >
+                {muted ? (
+                  <MicOff className="h-5 w-5 sm:h-6 sm:w-6" />
+                ) : (
+                  <Mic className="h-5 w-5 sm:h-6 sm:w-6" />
+                )}
+              </button>
+
+              {/* Video button */}
+              <button
+                onClick={toggleVideo}
+                className={cn(
+                  "flex h-11 w-11 items-center justify-center rounded-full transition-all sm:h-14 sm:w-14",
+                  !videoOn
+                    ? "bg-amber-500 text-white shadow-lg shadow-amber-500/30"
+                    : "bg-white/10 text-white hover:bg-white/20"
+                )}
+              >
+                {videoOn ? (
+                  <Video className="h-5 w-5 sm:h-6 sm:w-6" />
+                ) : (
+                  <VideoOff className="h-5 w-5 sm:h-6 sm:w-6" />
+                )}
+              </button>
+
+              {/* End call button */}
+              <button
+                onClick={end}
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-rose-500 text-white shadow-lg shadow-rose-500/30 transition-all hover:bg-rose-600 sm:h-14 sm:w-14"
+              >
+                <PhoneOff className="h-5 w-5 sm:h-6 sm:w-6" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Sidebar */}
+      <div className="w-full space-y-4 lg:w-[340px]">
+        {/* Call Info */}
+        <Card className="rounded-xl border border-zinc-200 bg-white p-4 shadow-lg dark:border-zinc-800 dark:bg-zinc-900 sm:rounded-2xl sm:p-5">
+          <h3 className="flex items-center gap-2 text-base font-semibold sm:text-lg">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/10 sm:h-8 sm:w-8">
+              <PhoneCall className="h-3.5 w-3.5 text-violet-500 sm:h-4 sm:w-4" />
+            </div>
+            Call Details
+          </h3>
+
+          <div className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
+            {/* Status */}
+            <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:rounded-xl sm:p-3">
+              <span className="text-xs text-zinc-500 sm:text-sm">Status</span>
+              <span
+                className={cn(
+                  "text-xs font-semibold capitalize sm:text-sm",
+                  status === "connected"
+                    ? "text-emerald-500"
+                    : status === "ringing"
+                      ? "text-amber-500"
                       : status === "ended"
-                        ? "Call ended"
-                        : "Ready to connect"}
-                </div>
+                        ? "text-rose-500"
+                        : "text-zinc-500"
+                )}
+              >
+                {status}
+              </span>
+            </div>
+
+            {/* Duration */}
+            <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:rounded-xl sm:p-3">
+              <span className="text-xs text-zinc-500 sm:text-sm">Duration</span>
+              <span className="font-mono text-xs font-semibold sm:text-sm">
+                {status === "connected" || status === "ended"
+                  ? formatTime(seconds)
+                  : "--:--"}
+              </span>
+            </div>
+
+            {/* Microphone */}
+            <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:rounded-xl sm:p-3">
+              <span className="text-xs text-zinc-500 sm:text-sm">
+                Microphone
+              </span>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                {muted ? (
+                  <MicOff className="h-3.5 w-3.5 text-rose-500 sm:h-4 sm:w-4" />
+                ) : (
+                  <Mic className="h-3.5 w-3.5 text-emerald-500 sm:h-4 sm:w-4" />
+                )}
+                <span className="text-xs font-semibold sm:text-sm">
+                  {muted ? "Muted" : "Active"}
+                </span>
+              </div>
+            </div>
+
+            {/* Camera */}
+            <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:rounded-xl sm:p-3">
+              <span className="text-xs text-zinc-500 sm:text-sm">Camera</span>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                {videoOn ? (
+                  <Video className="h-3.5 w-3.5 text-emerald-500 sm:h-4 sm:w-4" />
+                ) : (
+                  <VideoOff className="h-3.5 w-3.5 text-amber-500 sm:h-4 sm:w-4" />
+                )}
+                <span className="text-xs font-semibold sm:text-sm">
+                  {videoOn ? "On" : "Off"}
+                </span>
               </div>
             </div>
           </div>
+        </Card>
 
-          {/* Local video preview with floating effect */}
-          <motion.div
-            className="absolute bottom-6 right-6 overflow-hidden rounded-2xl border-2 border-white/10 bg-black/30 shadow-2xl shadow-black/30 backdrop-blur-sm"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", damping: 10 }}
-          >
-            {videoOn ? (
-              <video
-                ref={localVideoRef}
-                autoPlay
-                playsInline
-                muted
-                className="h-[140px] w-[180px] object-cover"
-                style={{ transform: "scaleX(-1)" }}
-              />
-            ) : (
-              <div className="flex h-[140px] w-[180px] flex-col items-center justify-center gap-2 text-xs text-white/70">
-                <VideoOff className="h-6 w-6" />
-                <div>Video Off</div>
+        {/* Participants */}
+        <Card className="rounded-xl border border-zinc-200 bg-white p-4 shadow-lg dark:border-zinc-800 dark:bg-zinc-900 sm:rounded-2xl sm:p-5">
+          <h3 className="flex items-center gap-2 text-base font-semibold sm:text-lg">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-500/10 sm:h-8 sm:w-8">
+              <Users className="h-3.5 w-3.5 text-cyan-500 sm:h-4 sm:w-4" />
+            </div>
+            Participants
+          </h3>
+
+          <div className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
+            {/* You */}
+            <div className="flex items-center gap-2.5 rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:gap-3 sm:rounded-xl sm:p-3">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 p-0.5 sm:h-10 sm:w-10">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-white dark:bg-zinc-900">
+                  <User className="h-4 w-4 text-violet-500 sm:h-5 sm:w-5" />
+                </div>
               </div>
-            )}
-          </motion.div>
+              <div className="flex-1 min-w-0">
+                <div className="truncate text-xs font-semibold sm:text-sm">
+                  {user?.displayName ?? "You"}
+                </div>
+                <div className="text-[10px] text-zinc-500 sm:text-xs">Host</div>
+              </div>
+              <div className="h-2 w-2 rounded-full bg-emerald-500" />
+            </div>
 
-          {/* Connection quality indicator */}
-          <div className="absolute top-6 right-6 flex items-center gap-2">
-            {[...Array(3)].map((_, i) => (
-              <motion.div
-                key={i}
+            {/* Remote user */}
+            <div className="flex items-center gap-2.5 rounded-lg bg-zinc-50 p-2.5 dark:bg-zinc-800/50 sm:gap-3 sm:rounded-xl sm:p-3">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 p-0.5 sm:h-10 sm:w-10">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-white dark:bg-zinc-900">
+                  <User className="h-4 w-4 text-cyan-500 sm:h-5 sm:w-5" />
+                </div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="truncate text-xs font-semibold sm:text-sm">
+                  Remote User
+                </div>
+                <div className="text-[10px] text-zinc-500 sm:text-xs">
+                  Participant
+                </div>
+              </div>
+              <div
                 className={cn(
                   "h-2 w-2 rounded-full",
-                  i === 0
-                    ? "bg-emerald-500"
-                    : i === 1
-                      ? "bg-amber-500"
-                      : "bg-rose-500"
+                  status === "connected" ? "bg-emerald-500" : "bg-zinc-400"
                 )}
-                animate={{
-                  opacity: [0.3, 1, 0.3],
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  delay: i * 0.2,
-                }}
-              />
-            ))}
-            <div className="text-xs text-white/70">Excellent</div>
-          </div>
-        </div>
-
-        {/* Call controls with animated background */}
-        <div className="relative p-4">
-          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <AnimatePresence mode="wait">
-              {status === "idle" && (
-                <motion.div
-                  key="start"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="flex gap-3"
-                >
-                  <Button
-                    onClick={start}
-                    className="group relative overflow-hidden bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30 transition-all hover:scale-105 hover:shadow-xl hover:shadow-emerald-500/40"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100" />
-                    <PhoneCall className="h-4 w-4 transition-transform group-hover:rotate-[15deg]" />
-                    <span className="ml-2">Start Call</span>
-                  </Button>
-                </motion.div>
-              )}
-
-              {(status === "ringing" || status === "connected") && (
-                <motion.div
-                  key="active"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="flex gap-3"
-                >
-                  <Button
-                    variant="secondary"
-                    onClick={toggleMute}
-                    className={cn(
-                      "group relative overflow-hidden transition-all",
-                      muted &&
-                        "bg-rose-500/20 text-rose-500 hover:bg-rose-500/30"
-                    )}
-                  >
-                    {muted ? (
-                      <>
-                        <MicOff className="h-4 w-4 transition-transform group-hover:scale-110" />
-                        <span className="ml-2">Unmute</span>
-                      </>
-                    ) : (
-                      <>
-                        <Mic className="h-4 w-4 transition-transform group-hover:scale-110" />
-                        <span className="ml-2">Mute</span>
-                      </>
-                    )}
-                  </Button>
-
-                  <Button
-                    variant="secondary"
-                    onClick={toggleVideo}
-                    className={cn(
-                      "group relative overflow-hidden transition-all",
-                      !videoOn &&
-                        "bg-amber-500/20 text-amber-500 hover:bg-amber-500/30"
-                    )}
-                  >
-                    {videoOn ? (
-                      <>
-                        <Video className="h-4 w-4 transition-transform group-hover:scale-110" />
-                        <span className="ml-2">Video On</span>
-                      </>
-                    ) : (
-                      <>
-                        <VideoOff className="h-4 w-4 transition-transform group-hover:scale-110" />
-                        <span className="ml-2">Video Off</span>
-                      </>
-                    )}
-                  </Button>
-
-                  <Button
-                    variant="danger"
-                    onClick={end}
-                    className="group relative overflow-hidden bg-gradient-to-r from-rose-500 to-pink-500 shadow-lg shadow-rose-500/30 transition-all hover:scale-105 hover:shadow-xl hover:shadow-rose-500/40"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100" />
-                    <PhoneOff className="h-4 w-4 transition-transform group-hover:rotate-[-15deg]" />
-                    <span className="ml-2">End Call</span>
-                  </Button>
-                </motion.div>
-              )}
-
-              {status === "ended" && (
-                <motion.div
-                  key="ended"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="flex gap-3"
-                >
-                  <Button
-                    variant="secondary"
-                    onClick={reset}
-                    className="group relative overflow-hidden transition-all hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                  >
-                    <RotateCcw className="h-4 w-4 transition-transform group-hover:rotate-180" />
-                    <span className="ml-2">Reset</span>
-                  </Button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </Card>
-
-      {/* Call status sidebar with enhanced design */}
-      <Card className="relative overflow-hidden rounded-3xl border-0 p-6 shadow-2xl">
-        {/* Animated background */}
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute -right-20 -top-20 h-40 w-40 animate-pulse rounded-full bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 blur-3xl" />
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500">
-            <Zap className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <div className="text-lg font-bold">Call Details</div>
-            <div className="text-xs text-zinc-500 dark:text-zinc-400">
-              Real-time connection status
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 space-y-4">
-          {/* Status card with animated gradient */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-            <div className="absolute inset-0 -z-10 bg-gradient-to-br from-violet-500/5 to-fuchsia-500/5 opacity-30" />
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="flex h-2 w-2 rounded-full bg-emerald-500" />
-                <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Status
-                </div>
-              </div>
-              <div className="text-lg font-semibold">
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-              </div>
-            </div>
-            <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-zinc-700 dark:bg-zinc-800">
-              <motion.div
-                className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500"
-                initial={{ width: "0%" }}
-                animate={{
-                  width:
-                    status === "connected"
-                      ? "100%"
-                      : status === "ringing"
-                        ? "50%"
-                        : "0%",
-                }}
-                transition={{ duration: 0.5 }}
               />
             </div>
           </div>
+        </Card>
 
-          {/* Timer card */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-cyan-500" />
-                <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Duration
-                </div>
-              </div>
-              <div className="text-lg font-mono font-semibold">
-                {status === "connected" ? formatTime(seconds) : "00:00"}
-              </div>
-            </div>
-          </div>
-
-          {/* Media controls */}
-          <div className="space-y-3">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  {muted ? (
-                    <MicOff className="h-4 w-4 text-rose-500" />
-                  ) : (
-                    <Mic className="h-4 w-4 text-emerald-500" />
-                  )}
-                  <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Microphone
-                  </div>
-                </div>
-                <div className="text-sm font-semibold">
-                  {muted ? "Muted" : "Active"}
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  {videoOn ? (
-                    <Video className="h-4 w-4 text-emerald-500" />
-                  ) : (
-                    <VideoOff className="h-4 w-4 text-amber-500" />
-                  )}
-                  <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Camera
-                  </div>
-                </div>
-                <div className="text-sm font-semibold">
-                  {videoOn ? "On" : "Off"}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Participants */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-violet-500" />
-                <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Participants
-                </div>
-              </div>
-              <div className="text-sm font-semibold">2</div>
-            </div>
-            <div className="mt-3 flex -space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white ring-2 ring-zinc-950 dark:ring-white/10">
-                <User className="h-4 w-4" />
-              </div>
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 text-white ring-2 ring-zinc-950 dark:ring-white/10">
-                <User className="h-4 w-4" />
-              </div>
-            </div>
-          </div>
+        {/* Note */}
+        <div className="rounded-lg bg-zinc-100 p-3 text-[10px] text-zinc-500 dark:bg-zinc-800/50 dark:text-zinc-400 sm:rounded-xl sm:p-4 sm:text-xs">
+          <p>
+            <strong>Note:</strong> This demo uses your device camera for the
+            local preview. Remote video is simulated.
+          </p>
         </div>
-
-        <div className="mt-6 text-xs text-zinc-500 dark:text-zinc-400">
-          <div className="rounded-xl bg-zinc-900/50 p-3 dark:bg-white/10">
-            <div className="font-semibold text-zinc-700 dark:text-zinc-300">
-              Note:
-            </div>
-            <div className="mt-1">
-              This demo uses your device camera for the local preview. Remote
-              video is simulated. Click the video button to enable your camera.
-            </div>
-          </div>
-        </div>
-      </Card>
+      </div>
     </div>
   );
 }

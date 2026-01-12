@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Operations Suite",
+  title: "Dashboard Chat Call",
   description: "Dashboard, real-time chat, and call simulation",
 };
 

@@ -395,7 +395,7 @@ export function DashboardClient({
   });
 
   return (
-    <div className="relative min-h-screen space-y-8">
+    <div className="relative  space-y-8">
       {/* Animated mesh gradient background */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute -left-1/4 -top-1/4 h-[600px] w-[600px] animate-pulse rounded-full bg-gradient-to-br from-violet-600/20 via-fuchsia-500/10 to-transparent blur-3xl" />
@@ -613,7 +613,7 @@ export function DashboardClient({
         </div>
 
         {/* External Feed */}
-        <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/70 p-6 shadow-2xl shadow-zinc-900/5 backdrop-blur-xl transition-all hover:shadow-zinc-900/10 dark:border-white/5 dark:bg-zinc-900/70">
+        <div className="group relative h-[58vh] overflow-y-scroll rounded-3xl border border-white/10 bg-white/70 p-6 shadow-2xl shadow-zinc-900/5 backdrop-blur-xl transition-all hover:shadow-zinc-900/10 dark:border-white/5 dark:bg-zinc-900/70">
           {/* Decorative corner accent */}
           <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 blur-3xl transition-all group-hover:from-cyan-500/30 group-hover:to-blue-500/30" />
 
