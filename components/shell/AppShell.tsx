@@ -26,13 +26,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-dvh">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 p-4 md:grid-cols-[260px_1fr] md:p-6">
+      <div className="mx-auto grid w-full grid-cols-1 gap-6 p-4 md:grid-cols-[260px_1fr] md:p-6">
         <aside className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-soft dark:border-zinc-800/70 dark:bg-zinc-950 md:sticky md:top-6 md:h-[calc(100dvh-3rem)]">
           <div className="flex items-center justify-between">
             <div className="text-sm font-semibold tracking-tight">
               Assessment
               <div className="text-xs font-normal text-zinc-500 dark:text-zinc-400">
-                Call Chat
+                Call
               </div>
             </div>
           </div>
